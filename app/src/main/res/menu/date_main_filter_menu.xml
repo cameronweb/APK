@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context=".MainActivity">
+    <item android:id="@+id/date_menu_all"
+      app:showAsAction="never"
+       android:title="@string/filter_menu_all"/>
+    <item android:id="@+id/date_menu_feture"
+          app:showAsAction="never"
+          android:title="@string/filter_menu_feture"/>
+    <item android:id="@+id/date_menu_past"
+          app:showAsAction="never"
+          android:title="@string/filter_menu_past"/>
+</menu>

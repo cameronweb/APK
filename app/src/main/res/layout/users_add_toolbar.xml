@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+                                   android:layout_width="match_parent"
+                                   android:layout_height="wrap_content"
+                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                   style="@style/AppTheme"
+                                   app:title="Сотрудник"
+                                   android:background="@color/design_default_color_primary"
+>
+    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:fitsSystemWindows="true"
+                    android:orientation="horizontal">
+        <ImageButton android:layout_width="wrap_content" android:layout_height="wrap_content"
+                     android:id="@+id/users_add_cencel_button"
+                     android:background="@color/design_default_color_primary"
+                     android:src="@drawable/baseline_arrow_back_black_18dp"
+                     android:onClick="onClick"
+                     android:layout_alignParentLeft="true"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:paddingLeft="70dp"
+
+                  android:text="Сотрудник" android:textSize="24sp" android:textStyle="bold"/>
+        <ImageButton android:layout_width="wrap_content" android:layout_height="wrap_content"
+                     android:id="@+id/users_add_accepr_button"
+                     android:background="@color/design_default_color_primary"
+                     android:src="@drawable/baseline_check_black_18dp"
+                     android:onClick="onClick"
+                     android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+
+</android.support.v7.widget.Toolbar>

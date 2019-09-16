@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent">
+
+    <RelativeLayout
+            android:id="@+id/item_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="10dp">
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:id="@+id/user_id"
+                  android:visibility="invisible"
+                  />
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:id="@+id/main_list_item_id_view"
+                  android:paddingLeft="5dp"
+                  android:fontFamily="sans-serif"
+                  android:text="123"
+                  android:paddingTop="5dp"
+                  android:textAllCaps="false"
+                  android:textColor="#000000"
+                  android:textSize="18sp"
+                  android:textStyle="bold" />
+
+        <TextView
+                android:id="@+id/fioView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:paddingLeft="50dp"
+                android:fontFamily="sans-serif"
+                android:paddingTop="5dp"
+                android:text="Федоров Анатолий Юрьевич"
+                android:textAllCaps="false"
+                android:textColor="#000000"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+        <TextView
+                android:id="@+id/dateView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:fontFamily="sans-serif"
+                android:padding="5dp"
+                android:text="03.06.2019"
+                android:textColor="#000102"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+        <TextView
+                android:id="@+id/dayName_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="5dp"
+                android:text="Понедельник" />
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/is_saturday_view"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="100dp"
+                android:text="Будний день"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginTop="30dp"
+                android:layout_marginLeft="35dp"
+                android:id="@+id/phone_view"
+                android:text="+79273978402"/>
+    </RelativeLayout>
+
+
+</android.support.constraint.ConstraintLayout>

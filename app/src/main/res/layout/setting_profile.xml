@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+                                             android:layout_height="match_parent" >
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+              android:text="Выберите своего пользователя из списка" tools:ignore="MissingConstraints"
+              android:layout_margin="5dp"
+              android:id="@+id/settings_labe_select"/>
+    <Spinner android:layout_width="match_parent" android:layout_height="wrap_content"
+             android:background="@android:drawable/btn_dropdown"
+             android:spinnerMode="dropdown"
+             android:id="@+id/settings_usersSpiner"
+             android:layout_below="@id/settings_labe_select"
+             android:layout_marginTop="10dp"
+             android:layout_margin="5dp"
+             />
+    <Switch android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:id="@+id/settings_switchnotify"
+            android:text="Уведомление о дежурстве"
+            android:layout_below="@id/settings_usersSpiner"
+            android:layout_margin="5dp"
+            android:layout_marginTop="30dp"
+            />
+   <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+             android:id="@+id/settings_timenotify_label"
+             android:layout_below="@id/settings_switchnotify"
+             android:text="@string/settings_notify_label"
+             android:layout_margin="20dp"
+             />
+    <TimePicker android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:id="@+id/settings_notify_timepicker"
+                android:layout_below="@id/settings_timenotify_label"
+                android:timePickerMode="spinner"
+                />
+
+
+
+</RelativeLayout>
