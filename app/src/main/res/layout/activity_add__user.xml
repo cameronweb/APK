@@ -5,27 +5,27 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".Add_User">
+        tools:context=".ViewModel.Add_User">
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical"
     tools:ignore="MissingConstraints">
        <include layout="@layout/users_add_toolbar" android:id="@+id/users_add_toolbar"/>
-                <android.support.design.widget.TextInputEditText android:layout_width="match_parent" android:layout_height="match_parent"
-                  android:id="@+id/users_add_fio_edittext"
-                  android:inputType="text"
-                  android:hint="Введите ФИО"
+                <com.google.android.material.textfield.TextInputEditText android:layout_width="match_parent" android:layout_height="match_parent"
+                                                                         android:id="@+id/users_add_fio_edittext"
+                                                                         android:inputType="text"
+                                                                         android:hint="Введите ФИО"
 
         />
 
-        <android.support.design.widget.TextInputEditText  android:layout_width="match_parent" android:layout_height="match_parent"
-                  android:hint="Дата рождения"
-                  android:inputType="date"
+        <com.google.android.material.textfield.TextInputEditText android:layout_width="match_parent" android:layout_height="match_parent"
+                                                                 android:hint="Дата рождения"
+                                                                 android:inputType="date"
 
-                  android:id="@+id/users_add_bdate_edittext"
+                                                                 android:id="@+id/users_add_bdate_edittext"
         />
-        <android.support.design.widget.TextInputEditText  android:layout_width="match_parent" android:layout_height="match_parent"
-                  android:id="@+id/users_add_phone_edittext"
-                  android:inputType="phone"
-                  android:hint="Номер телефона"/>
+        <com.google.android.material.textfield.TextInputEditText android:layout_width="match_parent" android:layout_height="match_parent"
+                                                                 android:id="@+id/users_add_phone_edittext"
+                                                                 android:inputType="phone"
+                                                                 android:hint="Номер телефона"/>
 
 
     </LinearLayout>

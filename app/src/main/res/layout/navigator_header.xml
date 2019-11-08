@@ -15,14 +15,14 @@
             android:paddingTop="20dp"
             app:srcCompat="@drawable/baseline_today_black_18dp" />
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="20dp"
             android:text="График дежурств"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

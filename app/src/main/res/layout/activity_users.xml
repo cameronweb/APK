@@ -5,7 +5,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".UsersActivity"
+        tools:context=".ViewModel.UsersActivity"
         android:orientation="vertical"
         android:id="@+id/users_list"
 
@@ -13,13 +13,13 @@
     <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
 
 <!--    <include layout="@layout/toolbar_layout" android:id="@+id/users_tool_bar"/>-->
-<android.support.v7.widget.RecyclerView android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:id="@+id/users_listview"
+<androidx.recyclerview.widget.RecyclerView android:layout_width="match_parent"
+                                           android:layout_height="match_parent"
+                                           android:id="@+id/users_listview"
 
 />
     </LinearLayout>
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_add_user"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -27,9 +27,10 @@
             android:layout_margin="@dimen/fab_margin"
             android:backgroundTint="@color/design_default_color_primary"
             app:srcCompat="@drawable/add_box_black_18dp"
+            android:fitsSystemWindows="true"
             android:elevation="6dp"
     android:onClick="onFabClick"/>
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_user_backtomain"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -37,6 +38,7 @@
             android:layout_margin="@dimen/fab_margin"
             android:backgroundTint="@color/design_default_color_primary"
             app:srcCompat="@drawable/backspace_black_18dp"
+            android:fitsSystemWindows="true"
             android:elevation="6dp"
             android:onClick="onFabClick"/>
 

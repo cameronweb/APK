@@ -1,25 +1,42 @@
 package com.example.workcalendar;
 
+import ServerBLL.FireBaseClient;
+import android.Manifest;
+import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import com.example.workcalendar.Presenter.Notify.NotifyService;
+import com.example.workcalendar.Presenter.Notify.WIFIStateService;
+import com.example.workcalendar.Presenter.Presenter;
+import com.example.workcalendar.ViewModel.UsersActivity;
+import com.example.workcalendar.ViewModel.WorkDayLyaout;
+import com.google.android.material.navigation.NavigationView;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import com.example.workcalendar.Adapters.Wokday_adapter;
-import com.example.workcalendar.DAO.DAOFactory;
-import com.example.workcalendar.DAO.WorkDayDAO;
-import com.example.workcalendar.Entity.WorkDay;
-import com.example.workcalendar.AsyncTasks.AsyncTask_LoadWorDays;
+import com.example.workcalendar.Presenter.Adapters.Wokday_adapter;
+import com.example.workcalendar.DataModel.Entity.WorkDay;
+import io.reactivex.disposables.Disposable;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
@@ -29,20 +46,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ActionBarDrawerToggle mDrawerToggle;
     DrawerLayout mDrawer;
     ListView list_view;
-    private ArrayList<WorkDay> workDayArrayList;
+    Presenter presenter;
+    WIFIStateService wifiStateService;
+    private Disposable subscription;
+    @Inject
+    public ArrayList<WorkDay> workDayArrayList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        GlobalApplication.workComponent().injectMain(this);
         init();
         loadWorkDays();
-
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        subscription.dispose();
+        unregisterReceiver(wifiStateService);
+    }
+
     public  void loadWorkDays()
     {
-        AsyncTask_LoadWorDays task_loadWorDays=new AsyncTask_LoadWorDays(list_view);
-        task_loadWorDays.execute(workDayArrayList);
-
+        subscription=GlobalApplication.getPresenter().loadWorkDaysToObservable().subscribe((workDays)->{
+            Wokday_adapter adapter=new Wokday_adapter(GlobalApplication.getAppContext(),workDays);
+            list_view.setAdapter(adapter);
+        });
     }
     public void init()
     {
@@ -58,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDrawer.openDrawer(Gravity.START);
+                mDrawer.openDrawer(GravityCompat.START);
             }
         });
 
@@ -75,7 +105,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         };
         mDrawer.addDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
-        workDayArrayList=new ArrayList<WorkDay>();
+        //workDayArrayList=new ArrayList<WorkDay>();
+        checkPermission();
     }
 
     @Override
@@ -93,10 +124,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.app_settings:
                 ShowActivity(Settings.class,false,0);
                 break;
+            case R.id.menu_exit:
+                applacationExit();
+                break;
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(Gravity.START);
+        drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+    private void applacationExit()
+    {
+
+        finishAndRemoveTask();
+        System.exit(0);
     }
 
     @Override
@@ -169,13 +209,45 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void deleteWorkDay(int work_id)
     {
-        DAOFactory factory=DAOFactory.getDAOFactory(getString(R.string.database));
-        WorkDayDAO workDayDAO=factory.getWorkDayDAO();
-        workDayDAO.deleteWorkDay(work_id);
+        GlobalApplication.getPresenter().deleteWorkDay(work_id);
         loadWorkDays();
     }
     public void onFabAddClick(View view)
     {
         ShowActivity(WorkDayLyaout.class,false,0);
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode==31337)
+        {
+            if(grantResults.length>0 && grantResults[0]== PackageManager.PERMISSION_GRANTED)
+            {
+                registerWifiStateReciever();
+            }
+        }
+    }
+    public void registerWifiStateReciever()
+    {
+        IntentFilter filter=new IntentFilter();
+        filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        wifiStateService=new WIFIStateService();
+        registerReceiver(wifiStateService, filter);
+    }
+
+    public void checkPermission()
+    {
+        int permission= ContextCompat.checkSelfPermission(GlobalApplication.getAppContext(), Manifest.permission.ACCESS_NETWORK_STATE);
+        if(permission== PackageManager.PERMISSION_GRANTED)
+        {
+          registerWifiStateReciever();
+        }else
+        {
+            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_NETWORK_STATE,Manifest.permission.CHANGE_WIFI_STATE},31337);
+        }
+    }
+
+
+
 }

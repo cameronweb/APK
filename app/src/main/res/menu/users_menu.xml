@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
-      tools:context=".UsersActivity">
+      tools:context=".ViewModel.UsersActivity">
     <item android:id="@+id/users_add_menu_item"
           android:title="@string/users_add"
           android:icon="@drawable/add_black_18dp"

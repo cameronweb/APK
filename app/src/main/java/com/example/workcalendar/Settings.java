@@ -1,37 +1,37 @@
 package com.example.workcalendar;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.PagerAdapter;
+import com.example.workcalendar.DataModel.Entity.Users;
+import com.example.workcalendar.ViewModel.ActivityModel;
+import com.google.android.material.tabs.TabLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.view.*;
-import android.view.autofill.AutofillValue;
 import android.widget.*;
-import com.example.workcalendar.Adapters.Users_adapter;
-import com.example.workcalendar.DAO.DB;
-import com.example.workcalendar.Notify.Notify;
+import com.example.workcalendar.Presenter.Adapters.Users_adapter;
+import com.example.workcalendar.DataModel.DAO.DB;
+import com.example.workcalendar.Presenter.Notify.Notify;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Settings extends AppCompatActivity {
 
     /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
+     * The {@link PagerAdapter} that will provide
      * fragments for each of the sections. We use a
      * {@link FragmentPagerAdapter} derivative, which will keep every
      * loaded fragment in memory. If this becomes too memory intensive, it
      * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
+     * {@link FragmentStatePagerAdapter}.
      */
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
@@ -66,7 +66,7 @@ public class Settings extends AppCompatActivity {
 
     public void onFabBackClick(View view)
     {
-        if(DB.isSettingNotify())
+        if(GlobalApplication.getPresenter().isSettingNotify())
         {
             new Notify().start(true);
         }
@@ -99,12 +99,12 @@ public class Settings extends AppCompatActivity {
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class PlaceholderFragment extends Fragment  {
+    public static class PlaceholderFragment extends Fragment implements ActivityModel {
         /**
          * The fragment argument representing the section number for this
          * fragment.
          */
-        private Switch switchNotify;
+        private Switch switchNotify, wifiSwitch;
         private Spinner usersSpiner;
         private static final String ARG_SECTION_NUMBER = "section_number";
         private TimePicker timePicker;
@@ -132,31 +132,43 @@ public class Settings extends AppCompatActivity {
             if (sectionNumber==1) {
                 rootView = inflater.inflate(R.layout.setting_profile, container, false);
                 init(rootView);
-                loadUsers();
+                GlobalApplication.getPresenter().loadUsers();
             }else
             {
                 rootView=inflater.inflate(R.layout.fragment_settings,container,false);
+                initSyncView(rootView);
             }
             return rootView;
         }
 
-        public void loadUsers()
-        {
-           Users_adapter users_adapter=new Users_adapter(GlobalApplication.getAppContext(),DB.getUsers());
+        @Override
+        public void loadList(ArrayList<Users> list) {
+            Users_adapter users_adapter=new Users_adapter(GlobalApplication.getAppContext(),list);
             usersSpiner.setAdapter(users_adapter);
         }
 
+        @Override
+        public void load(Object oneObject) {
+
+        }
+
+        @Override
+        public Object getData() {
+            return null;
+        }
+
+
         public void init(View rootView)
         {
-
+            GlobalApplication.getPresenter().setActivityModel(this);
             usersSpiner=rootView.findViewById(R.id.settings_usersSpiner);
-            boolean isChecked=DB.isSettingNotify();
+            boolean isChecked=GlobalApplication.getPresenter().isSettingNotify();
             usersSpiner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     TextView user_id_view=view.findViewById(R.id.id_view);
                     int selected_user_id=Integer.parseInt(user_id_view.getText().toString());
-                    DB.setNotifyUser(selected_user_id);
+                    GlobalApplication.getPresenter().setNotifyUser(selected_user_id);
                 }
 
                 @Override
@@ -171,7 +183,7 @@ public class Settings extends AppCompatActivity {
             switchNotify.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    DB.setSettingNotify(isChecked);
+                    GlobalApplication.getPresenter().setSettingNotify(isChecked);
 
                     if ((isChecked)) {
                         timePicker.setVisibility(View.VISIBLE);
@@ -182,6 +194,7 @@ public class Settings extends AppCompatActivity {
                     }
                 }
             });
+
             if(isChecked){
                 timePicker.setVisibility(View.VISIBLE);
                  load_time();
@@ -192,15 +205,25 @@ public class Settings extends AppCompatActivity {
                 @Override
                 public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
                     String time="1981-09-24 "+String.valueOf(hourOfDay)+":"+String.valueOf(minute)+":00";
-                    DB.setSettingsNotifyTime(time);
+                    GlobalApplication.getPresenter().setSettingsNotifyTime(time);
 
                 }
             });
         }
-
+        public void initSyncView(View syncView)
+        {
+            wifiSwitch=syncView.findViewById(R.id.settings_sync_wifi_switch);
+            wifiSwitch.setChecked(GlobalApplication.getPresenter().isWyfiSync());
+            wifiSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    GlobalApplication.getPresenter().setWifiSync(isChecked);
+                }
+            });
+        }
         public void load_time()
         {
-            Timestamp timestamp=DB.getSettingsNotifyTime();
+            Timestamp timestamp=GlobalApplication.getPresenter().getSettingsNotifyTime();
             timePicker.setHour(timestamp.getHours());
             timePicker.setMinute(timestamp.getMinutes());
         }
