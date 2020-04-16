@@ -21,8 +21,8 @@ public class RestServiceTest {
     Users users;
     WorkDay workDay;
     @Before
-    public void init() throws IOException, ParseException {
-        String url=serverURL+"users/064673d5-30b5-4bff-8f6e-60d87f83f09d";
+    public void init() {
+       /* String url=serverURL+"users/064673d5-30b5-4bff-8f6e-60d87f83f09d";
         URL servUrl=new URL(url);
         HttpURLConnection httpURLConnection=(HttpURLConnection) servUrl.openConnection();
         httpURLConnection.setRequestMethod("GET");
@@ -48,7 +48,11 @@ public class RestServiceTest {
         workDay.setSaturday(true);
         workDay.setUserId(users.getId());
         workDay.setUser(users);
-        workDay.setServerId("f69b36c9-125c-45a2-8e65-caebed976");
+        workDay.setServerId("f69b36c9-125c-45a2-8e65-caebed976");*/
+       users=new Users();
+       users.setPhone("+79273973702");
+       users.setName("Interceptor result");
+       users.setDateLong(31337);
     }
 
     @Test
@@ -60,11 +64,11 @@ public class RestServiceTest {
 
         Gson Json= new Gson();
         String jsonUser= Json.toJson(users);
-        String url=serverURL+"users/"+users.getServerID();
+        String url=serverURL+"users";
         URL servUrl=new URL(url);
         HttpURLConnection httpURLConnection=(HttpURLConnection) servUrl.openConnection();
         System.out.println(jsonUser);
-        httpURLConnection.setRequestMethod("PUT");
+        httpURLConnection.setRequestMethod("POST");
         httpURLConnection.setRequestProperty("Content-Type", "application/json; utf-8");
         httpURLConnection.setRequestProperty("Accept", "application/json");
         httpURLConnection.setDoOutput(true);
